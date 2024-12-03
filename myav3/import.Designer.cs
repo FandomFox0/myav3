@@ -29,49 +29,12 @@ namespace myav3
         /// </summary>
         private void InitializeComponent()
         {
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxTables = new System.Windows.Forms.ComboBox();
+            this.button3 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.ComboBoxTables = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.White;
-            this.button1.Enabled = false;
-            this.button1.FlatAppearance.BorderSize = 2;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(46, 118);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(225, 37);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Восстановить структуру";
-            this.button1.UseVisualStyleBackColor = false;
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.White;
-            this.button2.Enabled = false;
-            this.button2.FlatAppearance.BorderSize = 2;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(46, 173);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(225, 37);
-            this.button2.TabIndex = 6;
-            this.button2.Text = "Импортировать данные";
-            this.button2.UseVisualStyleBackColor = false;
-            // 
-            // button7
-            // 
-            this.button7.FlatAppearance.BorderSize = 2;
-            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button7.Location = new System.Drawing.Point(12, 229);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(87, 37);
-            this.button7.TabIndex = 16;
-            this.button7.Text = "Выйти";
-            this.button7.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -83,41 +46,83 @@ namespace myav3
             this.label1.TabIndex = 17;
             this.label1.Text = "Выберите таблицу";
             // 
-            // ComboBoxTables
+            // comboBoxTables
             // 
-            this.ComboBoxTables.FormattingEnabled = true;
-            this.ComboBoxTables.Location = new System.Drawing.Point(83, 57);
-            this.ComboBoxTables.Name = "ComboBoxTables";
-            this.ComboBoxTables.Size = new System.Drawing.Size(158, 31);
-            this.ComboBoxTables.TabIndex = 18;
+            this.comboBoxTables.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.comboBoxTables.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTables.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBoxTables.FormattingEnabled = true;
+            this.comboBoxTables.Location = new System.Drawing.Point(83, 57);
+            this.comboBoxTables.Name = "comboBoxTables";
+            this.comboBoxTables.Size = new System.Drawing.Size(158, 31);
+            this.comboBoxTables.TabIndex = 18;
+            // 
+            // button3
+            // 
+            this.button3.BackColor = System.Drawing.Color.White;
+            this.button3.FlatAppearance.BorderSize = 2;
+            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button3.Location = new System.Drawing.Point(12, 229);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(147, 37);
+            this.button3.TabIndex = 50;
+            this.button3.Text = "Вернуться назад";
+            this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.White;
+            this.button1.FlatAppearance.BorderSize = 2;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(46, 122);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(225, 35);
+            this.button1.TabIndex = 51;
+            this.button1.Text = "Восстановить структуру";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.White;
+            this.button2.FlatAppearance.BorderSize = 2;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Location = new System.Drawing.Point(46, 163);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(225, 35);
+            this.button2.TabIndex = 52;
+            this.button2.Text = "Импортировать данные";
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // import
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(318, 278);
-            this.Controls.Add(this.ComboBoxTables);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button7);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.comboBoxTables);
+            this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "import";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "import";
+            this.Text = "Импорт";
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxTables;
+        private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox ComboBoxTables;
     }
 }
