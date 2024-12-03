@@ -80,5 +80,13 @@ namespace myav3
             PROD.ShowDialog();
             this.Show();
         }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            import IMPORT = new import();
+            IMPORT.ShowDialog();
+            this.Show();
+        }
     }
 }
