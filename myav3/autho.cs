@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Configuration;
+using System.Drawing.Drawing2D;
+using System.Threading;
 
 namespace myav3
 {
@@ -18,7 +20,8 @@ namespace myav3
         {
             InitializeComponent();
         }
-
+        private string captchaText;
+        string conString = data.connect;
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -26,7 +29,7 @@ namespace myav3
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length < 5 || textBox2.Text.Length < 5)
+            if (textBox1.Text.Length < 5 || textBox2.Text.Length < 5 || button4.Enabled == true)
             {
                 button1.Enabled = false;
             }
@@ -113,7 +116,10 @@ namespace myav3
 
                                     textBox1.Clear(); textBox2.Clear();
                                 }
-                                else { MessageBox.Show("Неверный пароль", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+                                else {
+                                    MessageBox.Show("Неверный пароль", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    Captha();
+                                }
                             }
                             else { MessageBox.Show("ВЫ УВОЛЕНЫ!\nДоступ запрещён", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                         }
@@ -122,6 +128,70 @@ namespace myav3
                 }
             }
             catch { MessageBox.Show("Неизвестная ошибка", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        }
+        private void Captha() //Создание капчи
+        {
+            button3.Enabled = true;
+            button4.Enabled = true;
+            textBox3.Enabled = true;
+            CaptchaToImage();
+            button1.Enabled = false;
+            textBox1.Text = null;
+            textBox2.Text = null;
+            this.Width = 700;
+        }
+        private void CaptchaToImage() //Отрисовка капчи
+        {
+            Random random = new Random();
+            string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            captchaText = ""; for (int i = 0; i < 5; i++)
+            {
+                captchaText += chars[random.Next(chars.Length)];
+            }
+            Bitmap bmp = new Bitmap(pictureBox2.Width, pictureBox2.Height);
+            Graphics graphics = Graphics.FromImage(bmp);
+            graphics.SmoothingMode = SmoothingMode.AntiAlias; graphics.Clear(Color.Silver);
+            Font font = new Font("Arial", 25, FontStyle.Bold);
+            for (int i = 0; i < 5; i++)
+            {
+                PointF point = new PointF(i * 20, 0);
+                graphics.TranslateTransform(100, 50);
+                graphics.RotateTransform(random.Next(-10, 10));
+                graphics.DrawString(captchaText[i].ToString(), font, Brushes.LightCoral, point);
+                graphics.ResetTransform();
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                Pen pen = new Pen(Color.LightCoral, random.Next(2, 5));
+                int x1 = random.Next(pictureBox2.Width);
+                int y1 = random.Next(pictureBox2.Height);
+                int x2 = random.Next(pictureBox2.Width);
+                int y2 = random.Next(pictureBox2.Height); graphics.DrawLine(pen, x1, y1, x2, y2);
+            }
+            pictureBox2.Image = bmp;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (textBox3.Text == captchaText)
+            {
+                button1_Click(sender, e);
+            }
+            else //Блокировка системы на 10 секунд посленеудачного ввода
+            {
+                MessageBox.Show("Неверный ввод, блокировка системы на 10 секунд");
+                button4.Enabled = false;
+                button3.Enabled = false;
+                Thread.Sleep(10000);
+                button4.Enabled = true;
+                button3.Enabled = true;
+                Captha();
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Captha();
         }
     }
 }
