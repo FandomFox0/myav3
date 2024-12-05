@@ -29,7 +29,7 @@ namespace myav3
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length < 5 || textBox2.Text.Length < 5 || button4.Enabled == true)
+            if (textBox1.Text.Length < 5 || textBox2.Text.Length < 5)
             {
                 button1.Enabled = false;
             }
@@ -63,8 +63,8 @@ namespace myav3
                 string login = textBox1.Text;
                 string password = textBox2.Text;
 
-                string adminUsername = "local";
-                string adminPassword = "local";
+                string adminUsername = "admin11";
+                string adminPassword = "admin11";
                 if (login == adminUsername && password == adminPassword)
                 {
                     this.Hide();
