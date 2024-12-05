@@ -92,8 +92,8 @@ namespace myav3
                     
                     if (dt.Rows.Count != 1) 
                     {
-                        cmd = new MySqlCommand($"INSERT INTO `employee` (`login`, `password`, `role_id`, `department_id`, `surname`, `name`, `patronymic`, `age`, `phone_number`) " +
-                                                $"VALUES ('{textBox1.Text}', '{data.CreateMD5(textBox2.Text)}', '{helper("role")}', '{helper("department")}', '{textBox3.Text}', '{textBox4.Text}', '{textBox5.Text}', '{textBox6.Text}', '{helper("num")}');", con);
+                        cmd = new MySqlCommand($"INSERT INTO `employee` (`login`, `password`, `role_id`, `department_id`, `surname`, `name`, `patronymic`, `age`, `phone_number`, `status`) " +
+                                                $"VALUES ('{textBox1.Text}', '{data.CreateMD5(textBox2.Text)}', '{helper("role")}', '{helper("department")}', '{textBox3.Text}', '{textBox4.Text}', '{textBox5.Text}', '{textBox6.Text}', '{helper("num")}', 'Работает');", con);
                         cmd.ExecuteNonQuery();
                         MessageBox.Show("Вы успешно добавили нового сотрудника!", "Сотрудники", MessageBoxButtons.OK, MessageBoxIcon.Information);
 

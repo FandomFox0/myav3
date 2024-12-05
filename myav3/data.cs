@@ -11,6 +11,7 @@ namespace myav3
     {
         public static string connect = "host=localhost;uid=root;pwd=root;database=myav3";
         //public static string connect = "host=localhost;uid=root;pwd=;database=myav3";
+        //public static string connect = "host=localhost;uid=root;pwd=root";
 
         public static string login;
         public static string surname;

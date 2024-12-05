@@ -28,18 +28,21 @@ namespace myav3
 
         private void LoadTableNames()
         {
-            using (MySqlConnection con = new MySqlConnection(data.connect))
-            {
-                con.Open();
-                var cmd = new MySqlCommand("SHOW TABLES;", con);
-                using (var reader = cmd.ExecuteReader())
+            try {
+                using (MySqlConnection con = new MySqlConnection(ConnectionString.connectionString()))
                 {
-                    while (reader.Read())
+                    con.Open();
+                    var cmd = new MySqlCommand("SHOW TABLES;", con);
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        comboBoxTables.Items.Add(reader[0].ToString());
+                        while (reader.Read())
+                        {
+                            comboBoxTables.Items.Add(reader[0].ToString());
+                        }
                     }
                 }
             }
+            catch { MessageBox.Show("Локальное подключение к бд", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         private void ImportCsvToDatabase(string filePath, string tableName)
@@ -48,7 +51,7 @@ namespace myav3
 
             try
             {
-                using (MySqlConnection con = new MySqlConnection(data.connect))
+                using (MySqlConnection con = new MySqlConnection(ConnectionString.connectionString()))
                 {
                     con.Open();
 
@@ -76,11 +79,11 @@ namespace myav3
                     }
                 }
 
-                MessageBox.Show($"Successfully imported {importedRecordsCount} records.");
+                MessageBox.Show($"Успешно импортировано {importedRecordsCount} записей.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error importing data: {ex.Message}");
+                MessageBox.Show($"Ошибка импортирования данных: {ex.Message}");
             }
         }
         private int GetColumnCount(MySqlConnection con, string tableName)
@@ -110,51 +113,61 @@ namespace myav3
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (MySqlConnection con = new MySqlConnection(data.connect))
+            using (MySqlConnection con = new MySqlConnection(ConnectionString.connectionString()))
             {
                 con.Open();
                 try
                 {
                     string createSchemaScript = @"
 
-                CREATE TABLE `check` (
-                    `id_check` int NOT NULL AUTO_INCREMENT,
-                    `client_id_client` int NOT NULL,
-                    `employee_id` int NOT NULL,
-                    `date` varchar(45) NOT NULL,
-                    `total_cost` int NOT NULL,
-                    `service_id_service1` int NOT NULL,
-                    PRIMARY KEY (`id_check`),
-                    KEY `fk_check_client1_idx` (`client_id_client`),
-                    KEY `fk_check_employee1_idx` (`employee_id`),
-                    CONSTRAINT `fk_check_client1` FOREIGN KEY (`client_id_client`) REFERENCES `client` (`id_client`),
-                    CONSTRAINT `fk_check_employee1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id_employee`)
+                    CREATE TABLE `tariff` (
+                    `id_tariff` int NOT NULL AUTO_INCREMENT,
+                    `name` varchar(255) NOT NULL,
+                    `monthly_payment` int NOT NULL,
+                    `description` text NOT NULL,
+                    `relevance` varchar(8) NOT NULL,
+                    PRIMARY KEY (`id_tariff`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
                 CREATE TABLE `client` (
                     `id_client` int NOT NULL AUTO_INCREMENT,
                     `tariff_id` int NOT NULL,
-                    `surname` varchar(255) NOT NULL,
-                    `name` varchar(255) NOT NULL,
-                    `patronymic` varchar(255) DEFAULT NULL,
+                    `surname` varchar(45) NOT NULL,
+                    `name` varchar(45) NOT NULL,
+                    `patronymic` varchar(45) DEFAULT NULL,
                     `age` int NOT NULL,
                     `phone_number` varchar(45) NOT NULL,
-                    `series_and_number_passport` varchar(255) NOT NULL,
+                    `series_and_number_passport` varchar(45) NOT NULL,
                     PRIMARY KEY (`id_client`),
                     KEY `fk_client_tariff1_idx` (`tariff_id`),
                     CONSTRAINT `fk_client_tariff1` FOREIGN KEY (`tariff_id`) REFERENCES `tariff` (`id_tariff`)
+                    ) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb3;
+
+                CREATE TABLE `producer` (
+                    `id_producer` int NOT NULL AUTO_INCREMENT,
+                    `name` varchar(255) NOT NULL,
+                    `country` varchar(255) NOT NULL,
+                    PRIMARY KEY (`id_producer`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-                CREATE TABLE `compound` (
-                    `id_compound` int NOT NULL AUTO_INCREMENT,
-                    `check_id` int NOT NULL,
-                    `product_id` int NOT NULL,
-                    `quantity` int NOT NULL,
-                    PRIMARY KEY (`id_compound`),
-                    KEY `fk_compound_product1_idx` (`product_id`),
-                    KEY `fk_compound_check1_idx` (`check_id`),
-                    CONSTRAINT `fk_compound_check1` FOREIGN KEY (`check_id`) REFERENCES `check` (`id_check`),
-                    CONSTRAINT `fk_compound_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id_product`)
+                CREATE TABLE `product` (
+                    `id_product` int NOT NULL AUTO_INCREMENT,
+                    `name` text NOT NULL,
+                    `cost` int NOT NULL,
+                    `discount` int NOT NULL,
+                    `producer_id` int NOT NULL,
+                    `description` text NOT NULL,
+                    `photo` varchar(255) NOT NULL,
+                    `balance` int NOT NULL,
+                    PRIMARY KEY (`id_product`),
+                    KEY `fk_product_producer1_idx` (`producer_id`),
+                    CONSTRAINT `fk_product_producer1` FOREIGN KEY (`producer_id`) REFERENCES `producer` (`id_producer`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+                CREATE TABLE `role` (
+                    `id_role` int NOT NULL AUTO_INCREMENT,
+                    `name` varchar(255) NOT NULL,
+                    PRIMARY KEY (`id_role`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
                 CREATE TABLE `department` (
@@ -185,40 +198,29 @@ namespace myav3
                     CONSTRAINT `fk_employee_role1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id_role`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-                CREATE TABLE `producer` (
-                    `id_producer` int NOT NULL AUTO_INCREMENT,
-                    `name` varchar(255) NOT NULL,
-                    `country` varchar(255) NOT NULL,
-                    PRIMARY KEY (`id_producer`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                CREATE TABLE `check` (
+                    `id_check` int(11) NOT NULL AUTO_INCREMENT,
+                    `client_id_client` int(11) NOT NULL,
+                    `employee_id` int(11) NOT NULL,
+                    `date` datetime NOT NULL,
+                    `total_cost` int(11) NOT NULL,
+                    PRIMARY KEY (`id_check`),
+                    KEY `fk_check_client1_idx` (`client_id_client`),
+                    KEY `fk_check_employee1_idx` (`employee_id`),
+                    CONSTRAINT `fk_check_client1` FOREIGN KEY (`client_id_client`) REFERENCES `client` (`id_client`),
+                    CONSTRAINT `fk_check_employee1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`id_employee`)
+                    ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-                CREATE TABLE `product` (
-                    `id_product` int NOT NULL AUTO_INCREMENT,
-                    `name` text NOT NULL,
-                    `cost` int NOT NULL,
-                    `discount` int NOT NULL,
-                    `producer_id` int NOT NULL,
-                    `description` text NOT NULL,
-                    `photo` varchar(255) NOT NULL,
-                    `balance` int NOT NULL,
-                    PRIMARY KEY (`id_product`),
-                    KEY `fk_product_producer1_idx` (`producer_id`),
-                    CONSTRAINT `fk_product_producer1` FOREIGN KEY (`producer_id`) REFERENCES `producer` (`id_producer`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-                CREATE TABLE `role` (
-                    `id_role` int NOT NULL AUTO_INCREMENT,
-                    `name` varchar(255) NOT NULL,
-                    PRIMARY KEY (`id_role`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-                CREATE TABLE `tariff` (
-                    `id_tariff` int NOT NULL AUTO_INCREMENT,
-                    `name` varchar(255) NOT NULL,
-                    `monthly_payment` int NOT NULL,
-                    `description` text NOT NULL,
-                    `relevance` varchar(8) NOT NULL,
-                    PRIMARY KEY (`id_tariff`)
+                CREATE TABLE `compound` (
+                    `id_compound` int NOT NULL AUTO_INCREMENT,
+                    `check_id` int NOT NULL,
+                    `product_id` int NOT NULL,
+                    `quantity` int NOT NULL,
+                    PRIMARY KEY (`id_compound`),
+                    KEY `fk_compound_product1_idx` (`product_id`),
+                    KEY `fk_compound_check1_idx` (`check_id`),
+                    CONSTRAINT `fk_compound_check1` FOREIGN KEY (`check_id`) REFERENCES `check` (`id_check`),
+                    CONSTRAINT `fk_compound_product1` FOREIGN KEY (`product_id`) REFERENCES `product` (`id_product`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;";
 
                     using (MySqlCommand command = new MySqlCommand(createSchemaScript, con))

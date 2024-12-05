@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Configuration;
 
 namespace myav3
 {
@@ -59,52 +60,65 @@ namespace myav3
                 string login = textBox1.Text;
                 string password = textBox2.Text;
 
-                using (MySqlConnection con = new MySqlConnection(data.connect))
+                string adminUsername = "local";
+                string adminPassword = "local";
+                if (login == adminUsername && password == adminPassword)
                 {
-                    con.Open();
-                    MySqlCommand cmd = new MySqlCommand($"SELECT login, `password`, role_id, surname, `name`, patronymic, status FROM employee WHERE login = '{login}'", con);
-                    MySqlDataAdapter da = new MySqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    if (dt.Rows.Count != 0)
+                    this.Hide();
+                    import importForm = new import();
+                    importForm.ShowDialog();
+                    this.Show();
+                    return;
+                }
+                else
+                {
+                    using (MySqlConnection con = new MySqlConnection(data.connect))
                     {
-                        if (dt.Rows[0][6].ToString() == "Работает")
+                        con.Open();
+                        MySqlCommand cmd = new MySqlCommand($"SELECT login, `password`, role_id, surname, `name`, patronymic, status FROM employee WHERE login = '{login}'", con);
+                        MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        if (dt.Rows.Count != 0)
                         {
-                            password = data.CreateMD5(password);
-                            if (dt.Rows[0][1].ToString() == password)
+                            if (dt.Rows[0][6].ToString() == "Работает")
                             {
-                                data.login = login;
-                                if (dt.Rows[0][2].ToString() == "1")
+                                password = data.CreateMD5(password);
+                                if (dt.Rows[0][1].ToString() == password)
                                 {
-                                    data.role = "Администратор";
-                                }
-                                else { data.role = "Менеджер"; }
-                                data.surname = dt.Rows[0][3].ToString();
-                                data.name = dt.Rows[0][4].ToString();
-                                data.patronymic = dt.Rows[0][5].ToString();
+                                    data.login = login;
+                                    if (dt.Rows[0][2].ToString() == "1")
+                                    {
+                                        data.role = "Администратор";
+                                    }
+                                    else { data.role = "Менеджер"; }
+                                    data.surname = dt.Rows[0][3].ToString();
+                                    data.name = dt.Rows[0][4].ToString();
+                                    data.patronymic = dt.Rows[0][5].ToString();
 
-                                MessageBox.Show($"Добро пожаловать, {data.name}!", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    MessageBox.Show($"Добро пожаловать, {data.name}!", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                                this.Hide();
-                                if (data.role == "Администратор")
-                                {
-                                    admin forma = new admin();
-                                    forma.ShowDialog();
-                                }
-                                else
-                                {
-                                    menu forma = new menu();
-                                    forma.ShowDialog();
-                                }
-                                this.Show();
+                                    this.Hide();
+                                    if (data.role == "Администратор")
+                                    {
+                                        admin forma = new admin();
+                                        forma.ShowDialog();
+                                    }
+                                    else
+                                    {
+                                        menu forma = new menu();
+                                        forma.ShowDialog();
+                                    }
+                                    this.Show();
 
-                                textBox1.Clear(); textBox2.Clear();
+                                    textBox1.Clear(); textBox2.Clear();
+                                }
+                                else { MessageBox.Show("Неверный пароль", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                             }
-                            else { MessageBox.Show("Неверный пароль", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+                            else { MessageBox.Show("ВЫ УВОЛЕНЫ!\nДоступ запрещён", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                         }
-                        else { MessageBox.Show("ВЫ УВОЛЕНЫ!\nДоступ запрещён", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
+                        else { MessageBox.Show("Сотрудник с данным логином не найден", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                     }
-                    else { MessageBox.Show("Сотрудник с данным логином не найден", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Information); }
                 }
             }
             catch { MessageBox.Show("Неизвестная ошибка", "Авторизация", MessageBoxButtons.OK, MessageBoxIcon.Error); }

@@ -29,6 +29,7 @@ namespace myav3
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(import));
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxTables = new System.Windows.Forms.ComboBox();
             this.button3 = new System.Windows.Forms.Button();
@@ -103,7 +104,7 @@ namespace myav3
             // 
             this.pictureBox1.BackgroundImage = global::myav3.Properties.Resources.cat;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox1.Location = new System.Drawing.Point(266, -1);
+            this.pictureBox1.Location = new System.Drawing.Point(266, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(52, 48);
             this.pictureBox1.TabIndex = 54;
@@ -114,7 +115,7 @@ namespace myav3
             this.label10.AutoSize = true;
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("MV Boli", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(204, 11);
+            this.label10.Location = new System.Drawing.Point(204, 12);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(60, 21);
             this.label10.TabIndex = 53;
@@ -135,6 +136,7 @@ namespace myav3
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "import";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
